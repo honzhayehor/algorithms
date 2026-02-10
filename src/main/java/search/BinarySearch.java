@@ -17,15 +17,31 @@ public class BinarySearch {
      * @param comparator comparator based on which two elements of type T can be compared
      * @return index of element or -1 if not found
      */
-    public static <T> int binarySearch(List<? extends T> list, T key, Comparator<? super T> comparator) {
+    public static <T> int search(List<? extends T> list, T key, Comparator<? super T> comparator) {
+        return binarySearchCore(list.size(), mid -> comparator.compare(list.get(mid), key));
+    }
+
+    public static int search(int[] arr, int key) {
+        return binarySearchCore(arr.length, mid -> Integer.compare(arr[mid], key));
+    }
+
+    public static int search(float[] arr, float key) {
+        return binarySearchCore(arr.length, mid -> Float.compare(arr[mid], key));
+    }
+
+    @FunctionalInterface
+    private interface IntComparatorAtIndex {
+        int compareAt(int index);
+    }
+
+    private static int binarySearchCore(int size, IntComparatorAtIndex cmpAt) {
         int low = 0;
-        int high = list.size() - 1;
+        int high = size - 1;
 
         while (low <= high) {
             int mid = low + ((high - low) >>> 1);
-            T midVal = list.get(mid);
+            int cmp = cmpAt.compareAt(mid);
 
-            int cmp = comparator.compare(midVal, key);
             if (cmp < 0) {
                 low = mid + 1;
             } else if (cmp > 0) {
