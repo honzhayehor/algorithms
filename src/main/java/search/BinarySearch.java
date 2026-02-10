@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Implementation of Binary search algorithm.
- * <p>Class contains several static methods that work with Java Collection framework
+ * <p>Class contains several overloaded static methods that work with Java Collection framework
  */
 public class BinarySearch {
 
@@ -21,12 +21,48 @@ public class BinarySearch {
         return binarySearchCore(list.size(), mid -> comparator.compare(list.get(mid), key));
     }
 
+    /**
+     * Performs binary search on a sorted integer array.
+     *
+     * @param arr sorted integer array
+     * @param key element of type int index of which needs to be found in given array
+     * @return index of element or -1 if not found
+     */
     public static int search(int[] arr, int key) {
         return binarySearchCore(arr.length, mid -> Integer.compare(arr[mid], key));
     }
 
+    /**
+     * Performs binary search on a sorted float array.
+     *
+     * @param arr sorted float array
+     * @param key element of type float index of which needs to be found in given array
+     * @return index of element or -1 if not found
+     */
     public static int search(float[] arr, float key) {
         return binarySearchCore(arr.length, mid -> Float.compare(arr[mid], key));
+    }
+
+    /**
+     * Performs binary search on a sorted double array.
+     *
+     * @param arr sorted double array
+     * @param key element of type double index of which needs to be found in given array
+     * @return index of element or -1 if not found
+     */
+    public static int search(double[] arr, double key) {
+        return binarySearchCore(arr.length, mid -> Double.compare(arr[mid], key));
+    }
+
+    /**
+     * Performs binary search on a sorted byte array.
+     *
+     * @param arr sorted byte array
+     * @param key element of type byte index of which needs to be found in given array
+     * @return index of element or -1 if not found
+     */
+    public static int search(byte[] arr, byte key) {
+        return binarySearchCore(arr.length, mid -> Byte.compare(arr[mid], key));
     }
 
     @FunctionalInterface

@@ -42,4 +42,19 @@ class BinarySearchTest {
         assertEquals(3, index);
     }
 
+    @Test
+    void searchWithDoubleArray() {
+        double[] arr = {1.0, 2.0, 3.0, 5.0, 8.0, 10.0, 123.0};
+        int index = BinarySearch.search(arr, 10.0);
+        assertEquals(5, index);
+    }
+
+    @Test
+    void searchWithByteArray() {
+        byte[] arr = {1, 2, 3, 5, 8, 10, 123};
+        int index = BinarySearch.search(arr, (byte) 10);
+        assertEquals(5, index);
+    }
+
+
 }
