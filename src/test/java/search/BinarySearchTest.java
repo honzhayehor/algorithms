@@ -14,7 +14,7 @@ class BinarySearchTest {
     List<Person> listOfPersons = List.of(new Person(100), new Person(200), new Person(300), new Person(500));
 
     @Test
-    void findsCorrectIndexOfPersonBySalary() {
+    void findsCorrectIndexOfPersonaBySalary() {
         Person p = new Person(200);
         int index = BinarySearch.search(listOfPersons, p, Comparator.comparingInt(Person::salary));
         assertEquals(1, index);
@@ -56,5 +56,11 @@ class BinarySearchTest {
         assertEquals(5, index);
     }
 
+    @Test
+    void returnMiddleIndexIfAllElementsAreTheSame() {
+        byte[] arr = {12, 12, 12, 12, 12};
+        int index = BinarySearch.search(arr, (byte) 12);
+        assertEquals(2, index);
+    }
 
 }

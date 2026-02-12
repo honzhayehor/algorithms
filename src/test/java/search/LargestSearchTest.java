@@ -7,7 +7,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LargestSearchTest {
-    private record Person(int salary) {};
+    private record Person(int salary) {}
 
     @Test
     void returnsPersonWithTheBiggestSalary() {
@@ -16,15 +16,20 @@ class LargestSearchTest {
                 new Person(90_000),
                 new Person(200_000),
                 new Person(400_000),
-                new Person(120_000));
+                new Person(120_000),
+                new Person(120_000),
+                new Person(90_000),
+                new Person(200_000),
+                new Person(423_111),
+                new Person(294_222));
 
-        LargestSearch.Element<Person> element =
-                LargestSearch.search(personList, Person::salary, Integer::compare);
+        LargestSearch.Element<Person> element;
+        element = LargestSearch.search(personList, Person::salary, Integer::compare);
 
-        assertEquals(3, element.index());
+        assertEquals(8, element.index());
 
         int salary = element.value().salary();
-        assertEquals(400_000.0, salary);
+        assertEquals(423_111.0, salary);
     }
 
     @Test
@@ -43,4 +48,35 @@ class LargestSearchTest {
         assertEquals(4567, elementInt.value());
     }
 
+    @Test
+    void ifAllElementsTheSameReturnsFirstOccurrence() {
+        int arr[] = new int[] {12, 12, 12, 12, 12, 12, 12};
+        LargestSearch.ElementInt elementInt = LargestSearch.search(arr);
+        assertEquals(0, elementInt.index());
+        assertEquals(12, elementInt.value());
+    }
+
+    @Test
+    void returnsLargestByteInByteArray() {
+        byte arr[] = new byte[] {1, 23, 53, 7, 23};
+        LargestSearch.ElementByte elementByte = LargestSearch.search(arr);
+        assertEquals(2, elementByte.index());
+        assertEquals(53, elementByte.value());
+    }
+
+    @Test
+    void returnsLargestLongInLongArray() {
+        long arr[] = new long[] {1, 23, 53, 7, 23};
+        LargestSearch.ElementLong elementLong = LargestSearch.search(arr);
+        assertEquals(2, elementLong.index());
+        assertEquals(53, elementLong.value());
+    }
+
+    @Test
+    void returnLargestFloatInFloatArray() {
+        float arr[] = new float[] {1f, 23f, 53f, 7f, 23f};
+        LargestSearch.ElementFloat elementFloat = LargestSearch.search(arr);
+        assertEquals(2, elementFloat.index());
+        assertEquals(53, elementFloat.value());
+    }
 }

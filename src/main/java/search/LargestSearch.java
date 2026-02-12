@@ -9,8 +9,7 @@ import java.util.function.Function;
  */
 public class LargestSearch {
     private LargestSearch() {}
-
-    /**
+ /**
      * Search of the largest element in integer array
      * @param arr integer array. Not necessarily sorted;
      * @return ElementInt that contains index of the largest value and the value itself
@@ -26,7 +25,6 @@ public class LargestSearch {
     public static ElementLong search(long[] arr) {
         return maxCoreLong(arr.length, i -> arr[i]);
     }
-
     /**
      * Search of the largest element in double array
      * @param arr double array. Not necessarily sorted;
@@ -35,6 +33,15 @@ public class LargestSearch {
     public static ElementDouble search(double[] arr) {
         return maxCoreDouble(arr.length, i -> arr[i]);
     }
+
+    public static ElementByte search(byte[] arr) {
+        return maxCoreByte(arr.length, i -> arr[i]);
+    }
+
+    public static ElementFloat search(float[] arr) {
+        return maxCoreFloat(arr.length, i -> arr[i]);
+    }
+
     /**
      * Search of the largest element in integer array
      * @param collection collection of objects (not necessarily sorted).
@@ -58,7 +65,8 @@ public class LargestSearch {
     public record ElementInt(int index, int value) {}
     public record ElementLong(int index, long value) {}
     public record ElementDouble(int index, double value) {}
-
+    public record ElementByte(int index, byte value) {}
+    public record ElementFloat(int index, float value) {}
 
     @FunctionalInterface
     private interface IntAt { int get(int i); }
@@ -68,6 +76,12 @@ public class LargestSearch {
 
     @FunctionalInterface
     private interface DoubleAt { double get(int i); }
+
+    @FunctionalInterface
+    private interface ByteAt { byte get(int i); }
+
+    @FunctionalInterface
+    private interface FloatAt { float get(int i); }
 
     private static ElementInt maxCoreInt(int size, IntAt at) {
         if (size == 0) throw new IllegalArgumentException("Empty array");
@@ -111,6 +125,34 @@ public class LargestSearch {
         return new ElementDouble(bestIdx, best);
     }
 
+    private static ElementByte maxCoreByte(int size, ByteAt at) {
+        if (size == 0) throw new IllegalArgumentException("Empty array");
+        int bestIdx = 0;
+        byte best = at.get(0);
+        for (int i = 1; i < size; i++) {
+            byte v = at.get(i);
+            if (v > best) {
+                best = v;
+                bestIdx = i;
+            }
+        }
+        return new ElementByte(bestIdx, best);
+    }
+
+    private static ElementFloat maxCoreFloat(int size, FloatAt at) {
+        if (size == 0) throw new IllegalArgumentException("Empty array");
+        int bestIdx = 0;
+        float best = at.get(0);
+        for (int i = 1; i < size; i++) {
+            float v = at.get(i);
+            if (Float.compare(v, best) > 0) {
+                best = v;
+                bestIdx = i;
+            }
+        }
+        return new ElementFloat(bestIdx, best);
+    }
+
     /**
      * Search of the largest element in integer array
      * @param items collection where we want to find the largest element;
@@ -147,4 +189,137 @@ public class LargestSearch {
         }
         return new Element<>(bestIdx, bestVal);
     }
+
+    // Here comes overloaded public static methods that work with values and indexes only (So no Element class will be returned)
+    /**
+     * Static method that returns only index of the largest element
+     * @param arr int array.
+     * @return index of the largest element
+     * @throws IllegalArgumentException if array is empty
+     */
+    public static int searchIdx(int[] arr) {
+        ElementInt elementInt = search(arr);
+        return elementInt.index;
+    }
+    /**
+     * Static method that returns only value of the largest element
+     * @param arr int array.
+     * @return value of the largest element
+     * @throws IllegalArgumentException if array is empty
+     */
+    public static int searchVal(int[] arr) {
+        ElementInt elementInt = search(arr);
+        return elementInt.value;
+    }
+    /**
+     * Static method that returns only index of the largest element
+     * @param arr double array.
+     * @return index of the largest element
+     * @throws IllegalArgumentException if array is empty
+     */
+    public static int searchIdx(double[] arr) {
+        ElementDouble elementDouble = search(arr);
+        return elementDouble.index;
+    }
+    /**
+     * Static method that returns only value of the largest element
+     * @param arr double array.
+     * @return value of the largest element
+     * @throws IllegalArgumentException if array is empty
+     */
+    public static double searchVal(double[] arr) {
+        ElementDouble elementDouble = search(arr);
+        return elementDouble.value;
+    }
+    /**
+     * Static method that returns only index of the largest element
+     * @param arr long array.
+     * @return index of the largest element
+     * @throws IllegalArgumentException if array is empty
+     */
+    public static int searchIdx(long[] arr) {
+        ElementLong elementLong = search(arr);
+        return elementLong.index;
+    }
+    /**
+     * Static method that returns only value of the largest element
+     * @param arr long array.
+     * @return value of the largest element
+     * @throws IllegalArgumentException if array is empty
+     */
+    public static long searchVal(long[] arr) {
+        ElementLong elementLong = search(arr);
+        return elementLong.value;
+    }
+    /**
+     * Static method that returns only index of the largest element
+     * @param arr byte array.
+     * @return index of the largest element
+     * @throws IllegalArgumentException if array is empty
+     */
+    public static int searchIdx(byte[] arr) {
+        ElementByte elementByte = search(arr);
+        return elementByte.index;
+    }
+    /**
+     * Static method that returns only value of the largest element
+     * @param arr byte array.
+     * @return value of the largest element
+     * @throws IllegalArgumentException if array is empty
+     */
+    public static byte searchVal(byte[] arr) {
+        ElementByte elementByte = search(arr);
+        return elementByte.value;
+    }
+    /**
+     * Static method that returns only index of the largest element
+     * @param arr float array.
+     * @return index of the largest element
+     * @throws IllegalArgumentException if array is empty
+     */
+    public static int searchIdx(float[] arr) {
+        ElementFloat elementFloat = search(arr);
+        return elementFloat.index;
+    }
+    /**
+     * Static method that returns only value of the largest element
+     * @param arr float array.
+     * @return value of the largest element
+     * @throws IllegalArgumentException if array is empty
+     */
+    public static float searchVal(float[] arr) {
+        ElementFloat elementFloat = search(arr);
+        return elementFloat.value;
+    }
+    /**
+     * Static method that returns only index of the largest element
+     * @param collection collection that contains elements.
+     * @param keyExtractor Function that defines how to extract key from collection
+     * @param keyComparator Comparator that defines how to compare extracted keys.
+     * @return index of the largest element
+     * @throws IllegalArgumentException if array is empty
+     */
+    public static <T, K> int searchIdx(
+            Collection<T> collection,
+            Function<? super T, ? extends K> keyExtractor,
+            Comparator<? super K> keyComparator) {
+        Element<T> element = search(collection, keyExtractor, keyComparator);
+        return element.index;
+    }
+    /**
+     * Static method that returns only value of the largest element
+     * @param collection collection that contains elements.
+     * @param keyExtractor Function that defines how to extract key from collection
+     * @param keyComparator Comparator that defines how to compare extracted keys.
+     * @return value of the largest element
+     * @throws IllegalArgumentException if array is empty
+     */
+    public static <T, K> T searchVal(
+            Collection<T> collection,
+            Function<? super T, ? extends K> keyExtractor,
+            Comparator<? super K> keyComparator) {
+        Element<T> element = search(collection, keyExtractor, keyComparator);
+        return element.value;
+    }
+
 }
