@@ -1,6 +1,7 @@
 package search;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 import java.util.Comparator;
 import java.util.List;
@@ -9,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BinarySearchTest {
 
-    record Person(int salary) {};
+    record Person(int salary) {}
 
     List<Person> listOfPersons = List.of(new Person(100), new Person(200), new Person(300), new Person(500));
 
@@ -63,4 +64,9 @@ class BinarySearchTest {
         assertEquals(2, index);
     }
 
+    @Test
+    void throwsExceptionWhenSizeIsZero() {
+        byte[] arr = {};
+        assertThrows(IllegalArgumentException.class, () -> BinarySearch.search(arr, (byte) 2));
+    }
 }

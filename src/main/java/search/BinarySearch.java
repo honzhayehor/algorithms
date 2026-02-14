@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Implementation of Binary search algorithm.
- * <p>Class contains several overloaded static methods that work with Java Collection framework
+ * <p>Class contains several overloaded static methods that work with Java Collection framework and primitive arrays
  */
 public class BinarySearch {
 
@@ -16,6 +16,7 @@ public class BinarySearch {
      * @param key element of type T index of which needs to be found in given list
      * @param comparator comparator based on which two elements of type T can be compared
      * @return index of element or -1 if not found
+     * @throws IllegalArgumentException if collection's empty
      */
     public static <T> int search(List<? extends T> list, T key, Comparator<? super T> comparator) {
         return binarySearchCore(list.size(), mid -> comparator.compare(list.get(mid), key));
@@ -27,6 +28,7 @@ public class BinarySearch {
      * @param arr sorted integer array
      * @param key element of type int index of which needs to be found in given array
      * @return index of element or -1 if not found
+     * @throws IllegalArgumentException if array's length is zero
      */
     public static int search(int[] arr, int key) {
         return binarySearchCore(arr.length, mid -> Integer.compare(arr[mid], key));
@@ -38,6 +40,7 @@ public class BinarySearch {
      * @param arr sorted float array
      * @param key element of type float index of which needs to be found in given array
      * @return index of element or -1 if not found
+     * @throws IllegalArgumentException if array's length is zero
      */
     public static int search(float[] arr, float key) {
         return binarySearchCore(arr.length, mid -> Float.compare(arr[mid], key));
@@ -49,6 +52,7 @@ public class BinarySearch {
      * @param arr sorted double array
      * @param key element of type double index of which needs to be found in given array
      * @return index of element or -1 if not found
+     * @throws IllegalArgumentException if array's length is zero
      */
     public static int search(double[] arr, double key) {
         return binarySearchCore(arr.length, mid -> Double.compare(arr[mid], key));
@@ -60,6 +64,7 @@ public class BinarySearch {
      * @param arr sorted byte array
      * @param key element of type byte index of which needs to be found in given array
      * @return index of element or -1 if not found
+     * @throws IllegalArgumentException if array's length is zero
      */
     public static int search(byte[] arr, byte key) {
         return binarySearchCore(arr.length, mid -> Byte.compare(arr[mid], key));
@@ -70,7 +75,15 @@ public class BinarySearch {
         int compareAt(int index);
     }
 
+    /**
+     * Performs binary search on a sorted byte array.
+     * @param size size of given array
+     * @param cmpAt functional interface that specifies how to compare elements
+     * @return index of element or -1 if not found
+     * @throws IllegalArgumentException if size argument equals zero
+     */
     private static int binarySearchCore(int size, IntComparatorAtIndex cmpAt) {
+        if (size == 0) throw new IllegalArgumentException("Size cannot be zero");
         int low = 0;
         int high = size - 1;
 

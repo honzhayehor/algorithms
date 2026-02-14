@@ -28,7 +28,7 @@ public class MinMax {
     @FunctionalInterface
     private interface FloatAt { float get(int i); }
 
-    //Private enum that is helps with control flow (">" or "<" to be used when comparing values)
+    //Private enum that helps with control flow (">" or "<" to be used when comparing values)
     private enum Mode { MAX, MIN }
 
     /**
@@ -197,7 +197,7 @@ public class MinMax {
         /**
          * Search the largest element in given array
          * @param arr integer array. Not necessarily sorted;
-         * @return ElementDouble that contains index of the largest value and the value itselfa
+         * @return ElementDouble that contains index of the largest value and the value itself
          * @throws IllegalArgumentException if the given array is empty
          */
         public static ElementDouble of(double[] arr) {
