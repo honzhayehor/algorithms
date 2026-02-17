@@ -8,7 +8,7 @@ import java.util.*;
 public final class Graph {
     private final int graphId;
     private static int lastGraphID = 0;
-    private final Map<Node, Map<Node, Edge>> nodes = new HashMap<>(); // TODO: Change to Map<Node, List<Edge>>, since all nodes are effectively final with ID
+    private final Map<Node, Map<Node, Edge>> nodes = new HashMap<>();
     private int lastNodeID = 0;
     private int lastEdgeID = 0;
 
@@ -18,12 +18,38 @@ public final class Graph {
 
     //TODO: create methods for creating, removing and connecting nodes
 
+    /**
+     * Creates and registers new Node in Graph. Returns reference to newly created node.
+     * @return empty Node that has no connection to other Nodes in this Graph
+     * @throws IllegalArgumentException if map already has this node's ID
+     * */
     public Node createNode(){
         Node newNode = new Node(++lastNodeID, this.graphId);
         if (nodes.putIfAbsent(newNode, new HashMap<>()) != null) {
-            throw new IllegalStateException("Duplicate node id");
+            throw new IllegalStateException("Duplicate node key");
         }
         return newNode;
+    }
+
+    public void connectNodes(Node from, Node to, int distance) {
+        validateNodes(from, to);
+        Edge edge = new Edge(distance, to, ++lastEdgeID, this.graphId);
+        nodes.get(from).put(to, edge);
+    }
+
+    private void validateNode(Node node) {
+        if (node == null) {
+            throw new IllegalArgumentException("Node cannot be null");
+        }
+        if (node.getGraphId() != this.graphId || !nodes.containsKey(node)) {
+            throw new IllegalArgumentException("Node does not belong to this graph");
+        }
+    }
+
+    private void validateNodes(Node from, Node to) {
+        validateNode(from);
+        validateNode(to);
+        if (from.equals(to)) throw new IllegalArgumentException("Cannot connect one node to itself");
     }
 
     public static final class Edge {
@@ -32,7 +58,7 @@ public final class Graph {
         private final int id;
         private final Node target;
 
-        Edge(int distance, @NonNull Node target, int id, int graphId) {
+        private Edge(int distance, @NonNull Node target, int id, int graphId) {
             changeDistance(distance);
             this.target = target;
             this.id = id;
@@ -68,12 +94,13 @@ public final class Graph {
         private final int id;
         private final int graphId;
 
-        Node(int id, int graphId) {
+        private Node(int id, int graphId) {
             this.id = id;
             this.graphId = graphId;
         }
 
         public int getId() {return id;}
+        public int getGraphId() {return this.graphId;}
 
         @Override
         public boolean equals(Object o) {
