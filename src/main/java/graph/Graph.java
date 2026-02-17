@@ -8,7 +8,7 @@ import java.util.*;
 public final class Graph {
     private final int graphId;
     private static int lastGraphID = 0;
-    private final Map<Node, List<Edge>> nodes = new HashMap<>(); // TODO: Change to Map<Node, List<Edge>>, since all nodes are effectively final with ID
+    private final Map<Node, Map<Node, Edge>> nodes = new HashMap<>(); // TODO: Change to Map<Node, List<Edge>>, since all nodes are effectively final with ID
     private int lastNodeID = 0;
     private int lastEdgeID = 0;
 
@@ -18,7 +18,15 @@ public final class Graph {
 
     //TODO: create methods for creating, removing and connecting nodes
 
-    static final class Edge {
+    public Node createNode(){
+        Node newNode = new Node(++lastNodeID, this.graphId);
+        if (nodes.putIfAbsent(newNode, new HashMap<>()) != null) {
+            throw new IllegalStateException("Duplicate node id");
+        }
+        return newNode;
+    }
+
+    public static final class Edge {
         private final int graphId;
         private int distance;
         private final int id;
@@ -56,7 +64,7 @@ public final class Graph {
         }
     }
 
-    static final class Node {
+    public static final class Node {
         private final int id;
         private final int graphId;
 
@@ -65,7 +73,7 @@ public final class Graph {
             this.graphId = graphId;
         }
 
-        int getId() {return id;}
+        public int getId() {return id;}
 
         @Override
         public boolean equals(Object o) {
