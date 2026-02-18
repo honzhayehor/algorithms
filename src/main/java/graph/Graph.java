@@ -16,8 +16,6 @@ public final class Graph {
         this.graphId = ++lastGraphID;
     }
 
-    //TODO: create methods for creating, removing and connecting nodes
-
     /**
      * Creates and registers new Node in Graph. Returns reference to newly created node.
      * @return empty Node that has no connection to other Nodes in this Graph
@@ -47,7 +45,7 @@ public final class Graph {
     /**
      * Removes specified Node from the graph
      * @param node Node that needs to be removed
-     * @return Optional that may contain removed Node value
+     * @return boolean that indicated if the operation was successful
      * @throws IllegalArgumentException if given node is not from this graph
      * */
     public boolean removeNode(Node node) {
@@ -106,7 +104,8 @@ public final class Graph {
      * @throws IllegalArgumentException if given node is null or does not belong to current Graph
      * */
     public boolean checkAdjacency(Node from, Node to) {
-        validateNodes(from, to);
+        validateNode(from);
+        validateNode(to);
         return nodes.get(from).containsKey(to);
     }
 
@@ -118,7 +117,7 @@ public final class Graph {
      * */
     public boolean hasConnections(Node node) {
         validateNode(node);
-        return nodes.get(node).isEmpty();
+        return !nodes.get(node).isEmpty();
     }
 
     /**
@@ -129,8 +128,22 @@ public final class Graph {
      * @throws IllegalArgumentException if one of two nodes is null, doesn't belong to current Graph or if two nodes are the same node
      * */
     public int distanceBetween(Node from, Node to) {
-        validateNodes(from, to);
-        return nodes.get(from).get(to).getDistance();
+        validateNode(from);
+        validateNode(to);
+        Edge e = nodes.get(from).get(to);
+        if (e == null) throw new IllegalArgumentException("No edge from 'from' to 'to'");
+        return e.getDistance();
+    }
+
+    /**
+     * Returns map of all nodes that provided node points to
+     * @param nodeFrom Node for which needs to be return Map of other nodes
+     * @return Map of Nodes and Edges
+     * @throws IllegalArgumentException if given Node is null or does not belong to current Graph
+     * */
+    public Map<Node, Edge> pointsTo(Node nodeFrom) {
+        validateNode(nodeFrom);
+        return Collections.unmodifiableMap(nodes.get(nodeFrom));
     }
 
     public static final class Edge {
