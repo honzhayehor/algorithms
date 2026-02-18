@@ -3,7 +3,6 @@ package graph;
 import org.jspecify.annotations.NonNull;
 
 import java.util.*;
-import com.google.common.base.Optional;
 
 
 public final class Graph {
@@ -61,9 +60,15 @@ public final class Graph {
         return true;
     }
 
+    /**
+     * Removes connection between two nodes
+     * @param from Node that has initial connection
+     * @param to Node that Node 'from' points to
+     * @return boolean depends on the outcome of remove() operation.
+     * @throws IllegalArgumentException if nodes are null or they are the same node
+     * */
     public boolean disconnectNodes(Node from, Node to) {
-        validateNode(from);
-        validateNode(to);
+        validateNodes(from, to);
         return nodes.get(from).remove(to) != null;
     }
 
@@ -98,10 +103,34 @@ public final class Graph {
      * @param from Node that needs to be checked for adjacency
      * @param to Node that needs to be checked for adjacency
      * @return boolean that indicates whether specified nodes are adjacent
+     * @throws IllegalArgumentException if given node is null or does not belong to current Graph
      * */
     public boolean checkAdjacency(Node from, Node to) {
         validateNodes(from, to);
         return nodes.get(from).containsKey(to);
+    }
+
+    /**
+     * Checks the specified node if it has any connection to other nodes
+     * @param node Node that needs to be checked
+     * @return true if specified node has any connection and false if it doesn't
+     * @throws IllegalArgumentException if given node is null or does not belong to current Graph
+     * */
+    public boolean hasConnections(Node node) {
+        validateNode(node);
+        return nodes.get(node).isEmpty();
+    }
+
+    /**
+     * Returns distance between two given nodes
+     * @param from Node from which the edge goes
+     * @param to Node to which edge from Node 'from' goes
+     * @return int that represents distance between given nodes
+     * @throws IllegalArgumentException if one of two nodes is null, doesn't belong to current Graph or if two nodes are the same node
+     * */
+    public int distanceBetween(Node from, Node to) {
+        validateNodes(from, to);
+        return nodes.get(from).get(to).getDistance();
     }
 
     public static final class Edge {
