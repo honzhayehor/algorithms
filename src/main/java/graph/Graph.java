@@ -149,6 +149,14 @@ public final class Graph {
     }
 
     /**
+     * Returns list that consists of all nodes that are in current Graph
+     * @return List of Nodes
+     * */
+    public List<Node> asList() {
+        return List.copyOf(nodes.keySet());
+    }
+
+    /**
      * Check if given Node exists in a Graph
      * @param node Node that needs to be checked
      * @return boolean. True if Node exists in current Graph or False if it is not

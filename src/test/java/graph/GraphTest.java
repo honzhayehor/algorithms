@@ -1,12 +1,13 @@
 package graph;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class GraphTest {
 
     Graph graph;
@@ -17,6 +18,7 @@ class GraphTest {
     }
 
     @Test
+    @Order(1)
     void createsAndReturnsNodeWithCorrectNodeID() {
         Graph.Node node = graph.createNode();
         assertEquals(1, node.getId());
@@ -45,6 +47,15 @@ class GraphTest {
         Graph.Node nodeTo = graph.createNode();
         graph.connectNodes(nodeFrom, nodeTo, 2);
         assertTrue(graph.disconnectNodes(nodeFrom, nodeTo));
+    }
+
+    @Test
+    void correctDistanceBetweenTwoNodes() {
+        Graph.Node nodeFrom = graph.createNode();
+        Graph.Node nodeTo = graph.createNode();
+
+        graph.connectNodes(nodeFrom, nodeTo, 3);
+        assertEquals(3, graph.distanceBetween(nodeFrom, nodeTo));
     }
 
     @Test
@@ -91,5 +102,20 @@ class GraphTest {
 
         assertEquals(node2, nodeToChek1);
         assertEquals(node3, nodeToChek2);
+    }
+    @Test
+    void returnsListOfNodesAndThenRemoveAll() {
+        Graph.Node node1 = graph.createNode();
+        Graph.Node node2 = graph.createNode();
+        Graph.Node node3 = graph.createNode();
+        List<Graph.Node> listOfNodes = graph.asList();
+
+        for (Graph.Node node : listOfNodes) {
+            graph.removeNode(node);
+        }
+
+        assertFalse(graph.containsNode(node1));
+        assertFalse(graph.containsNode(node2));
+        assertFalse(graph.containsNode(node3));
     }
 }
