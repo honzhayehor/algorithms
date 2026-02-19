@@ -4,7 +4,9 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 
-
+/**
+ * Implementation of weighted and directional Graph that exposes public methods for Nodes and Edges manipulation
+ * */
 public final class Graph {
     private final int graphId;
     private static int lastGraphID = 0;
@@ -44,18 +46,18 @@ public final class Graph {
 
     /**
      * Removes specified Node from the graph
+     *
      * @param node Node that needs to be removed
-     * @return boolean that indicated if the operation was successful
      * @throws IllegalArgumentException if given node is not from this graph
-     * */
-    public boolean removeNode(Node node) {
+     *
+     */
+    public void removeNode(Node node) {
         validateNode(node);
-        nodes.remove(node);
+        nodes.remove(node); // remove node
 
-        for (Map<Node, Edge> edges : nodes.values()) {
+        for (Map<Node, Edge> edges : nodes.values()) { // remove edges that removed node had
             edges.remove(node);
         }
-        return true;
     }
 
     /**
@@ -146,6 +148,17 @@ public final class Graph {
         return Collections.unmodifiableMap(nodes.get(nodeFrom));
     }
 
+    /**
+     * Check if given Node exists in a Graph
+     * @param node Node that needs to be checked
+     * @return boolean. True if Node exists in current Graph or False if it is not
+     * */
+    public boolean containsNode(Node node) {
+        if (node == null) return false;
+        if (node.getGraphId() != this.graphId) return false;
+        return nodes.containsKey(node);
+    }
+
     public static final class Edge {
         private final int graphId;
         private int distance;
@@ -159,7 +172,7 @@ public final class Graph {
             this.graphId = graphId;
         }
 
-        public void changeDistance(int distance) {
+        private void changeDistance(int distance) {
             if (distance <= 0) {
                 throw new IllegalArgumentException("Distance cannot be negative or zero");
             }
