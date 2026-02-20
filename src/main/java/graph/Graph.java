@@ -46,16 +46,15 @@ public final class Graph {
 
     /**
      * Removes specified Node from the graph
-     *
      * @param node Node that needs to be removed
      * @throws IllegalArgumentException if given node is not from this graph
      *
      */
     public void removeNode(Node node) {
         validateNode(node);
-        nodes.remove(node); // remove node
+        nodes.remove(node);
 
-        for (Map<Node, Edge> edges : nodes.values()) { // remove edges that removed node had
+        for (Map<Node, Edge> edges : nodes.values()) {
             edges.remove(node);
         }
     }
@@ -68,7 +67,9 @@ public final class Graph {
      * @throws IllegalArgumentException if nodes are null or they are the same node
      * */
     public boolean disconnectNodes(Node from, Node to) {
-        validateNodes(from, to);
+        if (from.equals(to)) return false;
+        validateNode(from);
+        validateNode(to);
         return nodes.get(from).remove(to) != null;
     }
 
@@ -169,22 +170,22 @@ public final class Graph {
 
     public static final class Edge {
         private final int graphId;
-        private int distance;
+        private final int distance;
         private final int id;
         private final Node target;
 
         private Edge(int distance, @NonNull Node target, int id, int graphId) {
-            changeDistance(distance);
+            this.distance = validateDistance(distance);
             this.target = target;
             this.id = id;
             this.graphId = graphId;
         }
 
-        private void changeDistance(int distance) {
+        private int validateDistance(int distance) {
             if (distance <= 0) {
                 throw new IllegalArgumentException("Distance cannot be negative or zero");
             }
-            this.distance = distance;
+            return distance;
         }
         public int getDistance() {return distance;}
 
