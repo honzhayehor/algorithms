@@ -10,6 +10,8 @@ target/
 *.iml
 *.ipr
 
+src/main/java/Testing.java
+
 ### Eclipse ###
 .apt_generated
 .classpath
