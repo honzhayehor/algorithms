@@ -13,18 +13,30 @@ public final class Graph {
     private final Map<Node, Map<Node, Edge>> nodes = new HashMap<>();
     private int lastNodeID = 0;
     private int lastEdgeID = 0;
+    private final boolean directed;
 
     public Graph() {
-        this.graphId = ++lastGraphID;
+        this(true);
     }
 
+    public Graph(boolean directed) {
+        this.graphId = ++lastGraphID;
+        this.directed = directed;
+    }
     /**
      * Creates and registers new Node in Graph. Returns reference to newly created node.
      * @return empty Node that has no connection to other Nodes in this Graph
      * @throws IllegalArgumentException if map already has this node's ID
      * */
     public Node createNode(){
-        Node newNode = new Node(++lastNodeID, this.graphId);
+        return createNodeCore("");
+    }
+
+    public Node createNode(String name){
+        return createNodeCore(name);
+    }
+    private Node createNodeCore(String nodeName){
+        Node newNode = new Node(++lastNodeID, this.graphId, nodeName);
         if (nodes.putIfAbsent(newNode, new HashMap<>()) != null) {
             throw new IllegalStateException("Duplicate node key");
         }
@@ -40,8 +52,12 @@ public final class Graph {
      * */
     public void connectNodes(Node from, Node to, int distance) {
         validateNodes(from, to);
-        Edge edge = new Edge(distance, to, ++lastEdgeID, this.graphId);
-        nodes.get(from).put(to, edge);
+
+        nodes.get(from).put(to, new Edge(distance, to, ++lastEdgeID, this.graphId));
+
+        if (!directed) {
+            nodes.get(to).put(from, new Edge(distance, from, ++lastEdgeID, this.graphId));
+        }
     }
 
     /**
@@ -67,10 +83,19 @@ public final class Graph {
      * @throws IllegalArgumentException if nodes are null or they are the same node
      * */
     public boolean disconnectNodes(Node from, Node to) {
+        if (from == null || to == null) throw new IllegalArgumentException("Node cannot be null");
         if (from.equals(to)) return false;
+
         validateNode(from);
         validateNode(to);
-        return nodes.get(from).remove(to) != null;
+
+        boolean removed = nodes.get(from).remove(to) != null;
+
+        if (!directed) {
+            removed |= nodes.get(to).remove(from) != null;
+        }
+
+        return removed;
     }
 
     /**
@@ -209,14 +234,23 @@ public final class Graph {
     public static final class Node {
         private final int id;
         private final int graphId;
+        private final String name;
 
         private Node(int id, int graphId) {
+            this(id, graphId, "");
+        }
+        private Node(int id, int graphId, String name) {
             this.id = id;
             this.graphId = graphId;
+            if (name == null) throw new IllegalArgumentException("Name cannot be null");
+            this.name = name;
         }
+
 
         public int getId() {return id;}
         public int getGraphId() {return this.graphId;}
+
+        public String getName() {return this.name;}
 
         @Override
         public boolean equals(Object o) {

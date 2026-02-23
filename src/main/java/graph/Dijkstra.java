@@ -46,8 +46,35 @@ public final class Dijkstra {
         while (!pq.isEmpty()) {
             QNode q = pq.poll();
             Graph.Node u = q.node();
+
+            if (q.dist() != table.get(u).bestDistance) continue;
+
+            for (var entry : graph.pointsTo(u).entrySet()) {
+                Graph.Node v = entry.getKey();
+                int w = entry.getValue().getDistance();
+
+                int alt = table.get(u).bestDistance + w;
+                if (alt < table.get(v).bestDistance) {
+                    table.get(v).bestDistance = alt;
+                    table.get(v).previous = u;
+                    pq.add(new QNode(v, alt));
+                }
+            }
         }
 
-        return List.of();
+        List<Graph.Node> result = new ArrayList<>();
+
+        if (table.get(to).bestDistance == Integer.MAX_VALUE) return List.of(); // шляху нема
+
+        for (Graph.Node at = to; at != null; at = table.get(at).previous) {
+            result.add(at);
+            if (at.equals(from)) break;
+        }
+
+        if (!result.get(result.size() - 1).equals(from)) return List.of(); // на всяк випадок
+
+        Collections.reverse(result);
+        return result;
+
     }
 }
