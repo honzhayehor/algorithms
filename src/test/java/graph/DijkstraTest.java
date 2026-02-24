@@ -10,7 +10,7 @@ class DijkstraTest {
 
     @Test
     void correctPathFound() {
-        Graph graph = new Graph();
+        Graph graph = Graph.getInstance();
         Graph.Node A = graph.createNode();
         Graph.Node F = graph.createNode();
         Graph.Node D = graph.createNode();

@@ -14,7 +14,7 @@ class GraphTest {
 
     @BeforeEach
     void setup() {
-        graph = new Graph();
+        graph = Graph.getInstance();
     }
 
     @Test

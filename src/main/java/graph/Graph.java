@@ -15,14 +15,31 @@ public final class Graph {
     private int lastEdgeID = 0;
     private final boolean directed;
 
-    public Graph() {
-        this(true);
+    private Graph() {
+        this(true, ++lastGraphID);
     }
 
-    public Graph(boolean directed) {
-        this.graphId = ++lastGraphID;
+    private Graph(boolean directed, int graphId) {
+        this.graphId = graphId;
         this.directed = directed;
     }
+
+    /**
+     * Singleton method that returns instance of type Graph
+     * @return new Graph
+     * */
+    public static Graph getInstance() {
+        return new Graph(true, ++lastGraphID);
+    }
+
+    /**
+     * Overloaded singleton method that returns instance of type Graph based on given graph type (directed or not)
+     * @return new Graph with specified type (directed or not)
+     * */
+    public static Graph getInstance(boolean directed) {
+        return new Graph(directed, ++lastGraphID);
+    }
+
     /**
      * Creates and registers new Node in Graph. Returns reference to newly created node.
      * @return empty Node that has no connection to other Nodes in this Graph
@@ -32,9 +49,22 @@ public final class Graph {
         return createNodeCore("");
     }
 
+    /**
+     * Creates and registers new Node in Graph. Returns reference to newly created node.
+     * @param name name that will be assigned to given node. Does not affect functionality and for representative purposes only
+     * @return empty Node that has no connection to other Nodes in this Graph
+     * @throws IllegalArgumentException if map already has this node's ID
+     * */
     public Node createNode(String name){
         return createNodeCore(name);
     }
+
+    /**
+     * Core private method that creates and registers new Node in Graph. Returns reference to newly created node.
+     * @param  nodeName that will be assigned to given node. Does not affect functionality and for representative purposes only
+     * @return empty Node that has no connection to other Nodes in this Graph
+     * @throws IllegalArgumentException if map already has this node's ID
+     * */
     private Node createNodeCore(String nodeName){
         Node newNode = new Node(++lastNodeID, this.graphId, nodeName);
         if (nodes.putIfAbsent(newNode, new HashMap<>()) != null) {
@@ -262,6 +292,15 @@ public final class Graph {
         @Override
         public int hashCode() {
             return Objects.hash(graphId, id);
+        }
+
+        @Override
+        public String toString() {
+            return "Node{" +
+                    "id=" + id +
+                    ", graphId=" + graphId +
+                    ", name='" + name + '\'' +
+                    '}';
         }
     }
 }
