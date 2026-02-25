@@ -2,6 +2,7 @@ package graph;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,10 +34,32 @@ class DijkstraTest {
 
         List<Graph.Node> list = Dijkstra.findPath(graph, A, C);
 
-        for (Graph.Node node : list) {
-            System.out.println(node);
-        }
-
+        List<Graph.Node> expected = List.of(A, B, E, C);
+        assertEquals(expected, list);
     }
 
+    @Test
+    void throwsExceptionWhenGraphNull() {
+        Graph graph = null;
+        assertThrows(IllegalArgumentException.class, () -> Dijkstra.findPath(graph, null, null));
+    }
+
+    @Test
+    void correctPathFoundWithNotWeightedGraph() {
+        Graph graph = Graph.getInstance(true);
+        Graph.Node A = graph.createNode("A");
+        Graph.Node B = graph.createNode("B");
+        Graph.Node C = graph.createNode("C");
+        Graph.Node D = graph.createNode("D");
+        Graph.Node E = graph.createNode("E");
+        graph.connectNodes(A, B, 1);
+        graph.connectNodes(A, C, 1);
+        graph.connectNodes(B, D, 1);
+        graph.connectNodes(C, D, 1);
+        graph.connectNodes(D, E, 1);
+        List<Graph.Node> result = Dijkstra.findPath(graph, A, E);
+        List<Graph.Node> expected = List.of(A, B, D, E);
+
+        assertEquals(expected, result);
+    }
 }
