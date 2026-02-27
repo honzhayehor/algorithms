@@ -2,9 +2,12 @@ package sort;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SelectionSortTest {
 
@@ -54,5 +57,27 @@ class SelectionSortTest {
         SelectionSort.sort(people, Comparator.comparingInt(Person::salary));
 
         assertArrayEquals(expected, people);
+    }
+
+    @Test
+    void correctSortOfListOfPerson() {
+        record Person(int salary) {}
+
+        List<Person> people = new ArrayList<>();
+        people.add(new Person(242));
+        people.add(new Person(100));
+        people.add(new Person(79));
+        people.add(new Person(123));
+
+        List<Person> expected = List.of(
+                new Person(79),
+                new Person(100),
+                new Person(123),
+                new Person(242)
+        );
+
+        SelectionSort.sort(people, Comparator.comparingInt(Person::salary));
+        assertEquals(expected, people);
+
     }
 }
