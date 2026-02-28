@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SelectionSortTest {
 
@@ -79,5 +78,25 @@ class SelectionSortTest {
         SelectionSort.sort(people, Comparator.comparingInt(Person::salary));
         assertEquals(expected, people);
 
+    }
+
+    @Test
+    void throwsUnsupportedExceptionWhenUnmodifiableListProvided() {
+        record Person(int salary) {}
+
+        List<Person> people = List.of(
+                new Person(242),
+                new Person(100),
+                new Person(100),
+                new Person(79)
+        );
+
+        List<Person> expected = List.of(
+                new Person(79),
+                new Person(100),
+                new Person(123),
+                new Person(242)
+        );
+        assertThrows(UnsupportedOperationException.class, () -> SelectionSort.sort(people, Comparator.comparingInt(Person::salary)));
     }
 }

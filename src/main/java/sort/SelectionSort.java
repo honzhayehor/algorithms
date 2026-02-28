@@ -1,9 +1,18 @@
 package sort;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class SelectionSort {
+    /**
+     * Sorts the given array according to given comparator
+     * @param list List that has to be sorted
+     * @param comparator Comparator according to which comparison between list elements must be performed
+     * @return Sorted list according to provided comparator
+     * @throws IllegalArgumentException if provided comparator is null
+     * @throws UnsupportedOperationException if provided list is unmodifiable
+     * */
     public static <T> List<T> sort(List<T> list, Comparator<? super T> comparator) {
         for (int i = 0; i < list.size(); i++) {
             int smallestIdx = findSmallestIdx(list, i, list.size(), comparator);
