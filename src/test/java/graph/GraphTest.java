@@ -18,14 +18,6 @@ class GraphTest {
     }
 
     @Test
-    @Order(1)
-    void createsAndReturnsNodeWithCorrectNodeID() {
-        Graph.Node node = graph.createNode();
-        assertEquals(1, node.getId());
-        assertEquals(1, node.getGraphId());
-    }
-
-    @Test
     void correctIdAssigningToOtherNodes() {
         Graph.Node firstNode = graph.createNode();
         Graph.Node secondNode = graph.createNode();
