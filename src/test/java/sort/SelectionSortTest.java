@@ -1,10 +1,15 @@
 package sort;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -98,5 +103,65 @@ class SelectionSortTest {
                 new Person(242)
         );
         assertThrows(UnsupportedOperationException.class, () -> SelectionSort.sort(people, Comparator.comparingInt(Person::salary)));
+    }
+
+    @Test
+    void throwsIllegalArgumentExceptionWhenNullComparatorProvided() {
+        List<Integer> list = new ArrayList<>();
+        list.add(2);
+        list.add(1);
+        list.add(14);
+        assertThrows(IllegalArgumentException.class, () -> {SelectionSort.sort(list, null);});
+    }
+
+
+    private record Person(int salary){};
+
+    @ParameterizedTest
+    @MethodSource("providePeople")
+    void returnsCorrectResultNoMatterTheAttempts(List<Person> people) {
+
+        List<Person> sorted =
+                SelectionSort.sort(people, Comparator.comparingInt(Person::salary));
+
+        assertSorted(sorted, Comparator.comparingInt(Person::salary));
+    }
+    private static <T> void assertSorted(
+            List<T> list,
+            Comparator<? super T> comparator) {
+
+        for (int i = 1; i < list.size(); i++) {
+            assertTrue(
+                    comparator.compare(list.get(i - 1), list.get(i)) <= 0,
+                    "List is not sorted at index " + i
+            );
+        }
+    }
+    private static Stream<List<Person>> providePeople() {
+        Random random = new Random(42);
+        return IntStream.rangeClosed(1, 20)
+                .mapToObj(ignore -> generateRandomPeople(random));
+    }
+    private static List<Person> generateRandomPeople(Random random) {
+
+        int minPeople = 1;
+        int maxPeople = 100;
+
+        int salaryMin = 100;
+        int salaryMax = 500;
+
+        int numberOfPeople =
+                random.nextInt(maxPeople - minPeople + 1) + minPeople;
+
+        List<Person> people = new ArrayList<>();
+
+        for (int i = 0; i < numberOfPeople; i++) {
+            int salary =
+                    random.nextInt(salaryMax - salaryMin + 1) + salaryMin;
+
+            people.add(new Person(salary));
+        }
+
+        return people;
     }
 }
