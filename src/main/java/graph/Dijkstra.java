@@ -4,8 +4,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 
-public final class Dijkstra {
-    private Dijkstra() {}
+public final class Dijkstra implements GraphPath {
+    Dijkstra() {}
 
     private static final class DataHolder {
         int bestDistance;
@@ -25,7 +25,8 @@ public final class Dijkstra {
      * @return list of Nodes, e.g. path from start node to end node or empty list. If there are multiple path with equal cost, the algorithm will return the one that contains node that were created earlier (e.g. has lower NodeID). That explained by the hashCode() method of Graph.Node that uses Id only.
      * @throws IllegalArgumentException if start or end node do not belong to given graph.
      * */
-    public static List<Graph.Node> findPath(Graph graph, Graph.Node from, Graph.Node to) {
+    @Override
+    public List<Graph.Node> findPath(Graph graph, Graph.Node from, Graph.Node to) {
         if (graph == null) {
             throw new IllegalArgumentException("Graph cannot be null");
         }
