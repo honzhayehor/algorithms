@@ -19,6 +19,7 @@ public final class Graph {
         this(true, ++lastGraphID);
     }
 
+    // TODO: 1. Add methods to retreive Edge; 2. Add getGraphId method to Edge class; 3. asList() method but for all edges
     private Graph(boolean directed, int graphId) {
         this.graphId = graphId;
         this.directed = directed;
@@ -28,7 +29,7 @@ public final class Graph {
      * Singleton method that returns instance of type Graph
      * @return new Graph
      * */
-    public static Graph getInstance() {
+    public static Graph create() {
         return new Graph(true, ++lastGraphID);
     }
 
@@ -36,7 +37,7 @@ public final class Graph {
      * Overloaded singleton method that returns instance of type Graph based on given graph type (directed or not)
      * @return new Graph with specified type (directed or not)
      * */
-    public static Graph getInstance(boolean directed) {
+    public static Graph create(boolean directed) {
         return new Graph(directed, ++lastGraphID);
     }
 

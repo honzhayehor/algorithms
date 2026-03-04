@@ -5,7 +5,10 @@ import org.jspecify.annotations.Nullable;
 import java.util.*;
 
 public final class Dijkstra implements GraphPath {
-    Dijkstra() {}
+    private final Graph graph;
+    Dijkstra(Graph graph) {
+        this.graph = graph;
+    }
 
     private static final class DataHolder {
         int bestDistance;
@@ -19,14 +22,13 @@ public final class Dijkstra implements GraphPath {
     private record QNode(Graph.Node node, int dist) {}
     /**
      * For given graph finds best sequence of nodes that is the shortest distance between two given nodes.
-     * @param graph Graph that contains sequence of connected nodes
      * @param from Node from which the path has to be found
      * @param to Node to which path has to be found
      * @return list of Nodes, e.g. path from start node to end node or empty list. If there are multiple path with equal cost, the algorithm will return the one that contains node that were created earlier (e.g. has lower NodeID). That explained by the hashCode() method of Graph.Node that uses Id only.
      * @throws IllegalArgumentException if start or end node do not belong to given graph.
      * */
     @Override
-    public List<Graph.Node> findPath(Graph graph, Graph.Node from, Graph.Node to) {
+    public List<Graph.Node> findPath(Graph.Node from, Graph.Node to) {
         if (graph == null) {
             throw new IllegalArgumentException("Graph cannot be null");
         }

@@ -10,7 +10,7 @@ class DijkstraTest {
 
     @Test
     void correctPathFound() {
-        Graph graph = Graph.getInstance();
+        Graph graph = Graph.create();
         Graph.Node A = graph.createNode();
         Graph.Node F = graph.createNode();
         Graph.Node D = graph.createNode();
@@ -31,8 +31,8 @@ class DijkstraTest {
         graph.connectNodes(E, C, 3);
         graph.connectNodes(G, C, 4);
 
-        GraphPath algorithm = AlgorithmType.DIJKSTRA.create();
-        List<Graph.Node> list = algorithm.findPath(graph, A, C);
+        GraphPath algorithm = AlgorithmType.DIJKSTRA.create(graph);
+        List<Graph.Node> list = algorithm.findPath(A, C);
 
         List<Graph.Node> expected = List.of(A, B, E, C);
         assertEquals(expected, list);
@@ -41,13 +41,13 @@ class DijkstraTest {
     @Test
     void throwsExceptionWhenGraphNull() {
         Graph graph = null;
-        GraphPath algorithm = AlgorithmType.DIJKSTRA.create();
-        assertThrows(IllegalArgumentException.class, () -> algorithm.findPath(graph, null, null));
+        GraphPath algorithm = AlgorithmType.DIJKSTRA.create(graph);
+        assertThrows(IllegalArgumentException.class, () -> algorithm.findPath(null, null));
     }
 
     @Test
     void correctPathFoundWithNotWeightedGraph() {
-        Graph graph = Graph.getInstance(true);
+        Graph graph = Graph.create(true);
         Graph.Node A = graph.createNode("A");
         Graph.Node B = graph.createNode("B");
         Graph.Node C = graph.createNode("C");
@@ -58,8 +58,8 @@ class DijkstraTest {
         graph.connectNodes(B, D, 1);
         graph.connectNodes(C, D, 1);
         graph.connectNodes(D, E, 1);
-        GraphPath algorithm = AlgorithmType.DIJKSTRA.create();
-        List<Graph.Node> result = algorithm.findPath(graph, A, E);
+        GraphPath algorithm = AlgorithmType.DIJKSTRA.create(graph);
+        List<Graph.Node> result = algorithm.findPath(A, E);
         List<Graph.Node> expected = List.of(A, B, D, E);
 
         assertEquals(expected, result);
