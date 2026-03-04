@@ -7,6 +7,7 @@ import java.util.*;
 public final class Dijkstra implements GraphPath {
     private final Graph graph;
     Dijkstra(Graph graph) {
+        Objects.requireNonNull(graph);
         this.graph = graph;
     }
 
@@ -29,9 +30,6 @@ public final class Dijkstra implements GraphPath {
      * */
     @Override
     public List<Graph.Node> findPath(Graph.Node from, Graph.Node to) {
-        if (graph == null) {
-            throw new IllegalArgumentException("Graph cannot be null");
-        }
         if (!graph.containsNode(from) || !graph.containsNode(to)) {
             throw new IllegalArgumentException("Node does not belong to given graph");
         }
@@ -51,6 +49,7 @@ public final class Dijkstra implements GraphPath {
             QNode q = pq.poll();
             Graph.Node u = q.node();
 
+            if (u.equals(to)) break;
             if (q.dist() != table.get(u).bestDistance) continue;
 
             for (var entry : graph.pointsTo(u).entrySet()) {
