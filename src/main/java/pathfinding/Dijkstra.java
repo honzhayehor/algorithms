@@ -1,5 +1,6 @@
-package graph;
+package pathfinding;
 
+import graph.Graph;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -7,7 +8,9 @@ import java.util.*;
 public final class Dijkstra implements GraphPath {
     private final Graph graph;
     Dijkstra(Graph graph) {
-        Objects.requireNonNull(graph);
+        if (graph == null) {
+            throw new IllegalArgumentException("Graph cannot be null");
+        }
         this.graph = graph;
     }
 

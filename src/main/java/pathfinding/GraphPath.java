@@ -1,4 +1,6 @@
-package graph;
+package pathfinding;
+
+import graph.Graph;
 
 import java.util.List;
 

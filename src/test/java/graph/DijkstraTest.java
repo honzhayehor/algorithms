@@ -1,6 +1,8 @@
 package graph;
 
 import org.junit.jupiter.api.Test;
+import pathfinding.GraphPath;
+import pathfinding.PathFinderFactory;
 
 import java.util.List;
 
@@ -31,7 +33,7 @@ class DijkstraTest {
         graph.connectNodes(E, C, 3);
         graph.connectNodes(G, C, 4);
 
-        GraphPath algorithm = AlgorithmType.DIJKSTRA.create(graph);
+        GraphPath algorithm = PathFinderFactory.dijkstra(graph);
         List<Graph.Node> list = algorithm.findPath(A, C);
 
         List<Graph.Node> expected = List.of(A, B, E, C);
@@ -41,8 +43,7 @@ class DijkstraTest {
     @Test
     void throwsExceptionWhenGraphNull() {
         Graph graph = null;
-        GraphPath algorithm = AlgorithmType.DIJKSTRA.create(graph);
-        assertThrows(IllegalArgumentException.class, () -> algorithm.findPath(null, null));
+        assertThrows(IllegalArgumentException.class, () -> PathFinderFactory.dijkstra(graph));
     }
 
     @Test
@@ -58,7 +59,7 @@ class DijkstraTest {
         graph.connectNodes(B, D, 1);
         graph.connectNodes(C, D, 1);
         graph.connectNodes(D, E, 1);
-        GraphPath algorithm = AlgorithmType.DIJKSTRA.create(graph);
+        GraphPath algorithm = PathFinderFactory.dijkstra(graph);
         List<Graph.Node> result = algorithm.findPath(A, E);
         List<Graph.Node> expected = List.of(A, B, D, E);
 

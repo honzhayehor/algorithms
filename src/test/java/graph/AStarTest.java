@@ -2,6 +2,8 @@ package graph;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pathfinding.AStar;
+import pathfinding.PathFinderFactory;
 
 import java.util.List;
 
@@ -15,7 +17,7 @@ class AStarTest {
     @BeforeEach
     void setUp() {
         graph = Graph.create();
-        aStar = new AStar(graph);
+        aStar = PathFinderFactory.aStar(graph);
     }
 
     @Test

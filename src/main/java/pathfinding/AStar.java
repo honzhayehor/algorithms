@@ -1,5 +1,6 @@
-package graph;
+package pathfinding;
 
+import graph.Graph;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -25,11 +26,12 @@ public class AStar implements GraphPath {
 
     private record QNode(Graph.Node node, double fScore, double gScore) {}
 
-    public void setCoordinates(Graph.Node node, double x, double y) {
+    public AStar setCoordinates(Graph.Node node, double x, double y) {
         if (!graph.containsNode(node)) {
             throw new IllegalArgumentException("This node does not belong to current graph");
         }
         coordinates.put(node, new double[] {x, y});
+        return this;
     }
 
     private double heuristic(Graph.Node current, Graph.Node goal) {
@@ -82,6 +84,7 @@ public class AStar implements GraphPath {
 
         List<Graph.Node> result = new ArrayList<>();
         if (table.get(to).bestDistance == Double.MAX_VALUE) return List.of();
+
         for (Graph.Node at = to; at != null; at = table.get(at).previous) {
             result.add(at);
             if (at.equals(from)) break;
