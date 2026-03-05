@@ -2,7 +2,6 @@ package pathfinding;
 
 import graph.Graph;
 import org.jspecify.annotations.Nullable;
-
 import java.util.*;
 
 public class AStar implements GraphPath {
@@ -14,18 +13,39 @@ public class AStar implements GraphPath {
         this.graph = graph;
     }
 
+    /**
+     * Data holder structure, that holds best distance of given node and its previous node.
+     * This is used in pair with Graph.Node class inside Map<Graph.Node, DataHolder> for quick lookup while iterating Priority Queue (as specified by Dijkstra algorithm)
+     * */
     private static final class DataHolder {
         double bestDistance;
         Graph.Node previous;
 
+        /**
+         * Constructor of DataHolder object.
+         * @param bestDistance double value that indicates the best yet found distance of given key (node)
+         * @param previous previous node, going through which will grant that best distance. This parameter can and should be null when initializing algorithm table.
+         * */
         DataHolder(double bestDistance, Graph.@Nullable Node previous) {
             this.bestDistance = bestDistance;
             this.previous = previous;
         }
     }
 
+    /**
+     * Data holder for node, fScore and gScore as specified by AStar algorithm.
+     * This structure is used in priority queue.
+     * */
     private record QNode(Graph.Node node, double fScore, double gScore) {}
 
+    /**
+     * Method that enables setting coordinates for given node (since Graph does not provide coordinate system for nodes, this system implemented here)
+     * @param node node to which coordinates needed to be assigned
+     * @param x X coordinate in 2D space (Cartesian coordinate system)
+     * @param y Y coordinate in 2D space (Cartesian coordinate system)
+     * @throws IllegalArgumentException if provided node does not belong to current graph
+     * @return Astar itself to enable method chaining in object creation.
+     * */
     public AStar setCoordinates(Graph.Node node, double x, double y) {
         if (!graph.containsNode(node)) {
             throw new IllegalArgumentException("This node does not belong to current graph");
@@ -34,6 +54,12 @@ public class AStar implements GraphPath {
         return this;
     }
 
+    /**
+     * Method that calculates Euclidean distance heuristic for two given nodes
+     * @param current node at which the algorithm currently at
+     * @param goal node that is the end goal of the algorithm
+     * @return double that represents Euclidean heuristic or 0 if two nodes are null
+     * */
     private double heuristic(Graph.Node current, Graph.Node goal) {
         double[] a = coordinates.get(current);
         double[] b = coordinates.get(goal);
@@ -45,6 +71,13 @@ public class AStar implements GraphPath {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
+    /**
+     * Method that finds path between two given nodes of a graph
+     * @param from starting node
+     * @param to end goal node
+     * @throws IllegalArgumentException if one of provided nodes does not belong to current graph
+     * @return List that contains path (sequence of nodes) from starting node to end node
+     * */
     @Override
     public List<Graph.Node> findPath(Graph.Node from, Graph.Node to) {
         if (!graph.containsNode(from) || !graph.containsNode(to)) {
@@ -85,7 +118,7 @@ public class AStar implements GraphPath {
         List<Graph.Node> result = new ArrayList<>();
         if (table.get(to).bestDistance == Double.MAX_VALUE) return List.of();
 
-        for (Graph.Node at = to; at != null; at = table.get(at).previous) {
+        for (Graph.Node at = to; at != null; at = table.get(at).previous) { // reversing the list since it starts with end node
             result.add(at);
             if (at.equals(from)) break;
         }
