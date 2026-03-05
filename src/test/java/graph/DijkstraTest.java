@@ -1,7 +1,7 @@
 package graph;
 
 import org.junit.jupiter.api.Test;
-import pathfinding.GraphPath;
+import pathfinding.Dijkstra;
 import pathfinding.PathFinderFactory;
 
 import java.util.List;
@@ -33,7 +33,7 @@ class DijkstraTest {
         graph.connectNodes(E, C, 3);
         graph.connectNodes(G, C, 4);
 
-        GraphPath algorithm = PathFinderFactory.dijkstra(graph);
+        Dijkstra algorithm = PathFinderFactory.dijkstra(graph);
         List<Graph.Node> list = algorithm.findPath(A, C);
 
         List<Graph.Node> expected = List.of(A, B, E, C);
@@ -59,7 +59,7 @@ class DijkstraTest {
         graph.connectNodes(B, D, 1);
         graph.connectNodes(C, D, 1);
         graph.connectNodes(D, E, 1);
-        GraphPath algorithm = PathFinderFactory.dijkstra(graph);
+        Dijkstra algorithm = PathFinderFactory.dijkstra(graph);
         List<Graph.Node> result = algorithm.findPath(A, E);
         List<Graph.Node> expected = List.of(A, B, D, E);
 

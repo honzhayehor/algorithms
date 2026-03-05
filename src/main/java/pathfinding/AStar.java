@@ -4,13 +4,30 @@ import graph.Graph;
 import org.jspecify.annotations.Nullable;
 import java.util.*;
 
-public class AStar implements GraphPath {
+public class AStar{
 
     private final Graph graph;
-    private final Map<Graph.Node, double[]> coordinates = new HashMap<>();
+    private final Map<Graph.Node, double[]> coordinates;
 
-    AStar(Graph graph) {
+    /**
+     * Constructor that takes graph and coordinate map as parameter
+     * @param graph that contains nodes
+     * */
+    public AStar(Graph graph) {
         this.graph = graph;
+        this.coordinates = new HashMap<>();
+    }
+
+    /**
+     * Constructor that takes graph and coordinate map as parameter
+     * @param graph that contains nodes
+     * @param coordinateMap map with coordinates of nodes of provided graph. This map can be filled later through public API of this class.
+     * @throws IllegalArgumentException if at least one node of provided coordinateMap does not belong to current graph
+     * */
+    public AStar(Graph graph, CoordinateMap coordinateMap) {
+        this.graph = graph;
+        this.coordinates = new HashMap<>();
+        coordinateMap.getMap().forEach(this::validateAndPut);
     }
 
     /**
@@ -47,11 +64,21 @@ public class AStar implements GraphPath {
      * @return Astar itself to enable method chaining in object creation.
      * */
     public AStar setCoordinates(Graph.Node node, double x, double y) {
-        if (!graph.containsNode(node)) {
-            throw new IllegalArgumentException("This node does not belong to current graph");
-        }
-        coordinates.put(node, new double[] {x, y});
+        validateAndPut(node, new double[]{x, y});
         return this;
+    }
+
+    /**
+     * Validation method that checks if provided node belongs to current graph
+     * @param node that is to be validated
+     * @param coords of given node. Will be added to object Map if validation passes
+     * @throws IllegalArgumentException if node has not passed the validation
+     * */
+    private void validateAndPut(Graph.Node node, double[] coords) {
+        if (!graph.containsNode(node)) {
+            throw new IllegalArgumentException("Node " + node + " does not belong to this graph");
+        }
+        coordinates.put(node, coords);
     }
 
     /**
@@ -78,7 +105,6 @@ public class AStar implements GraphPath {
      * @throws IllegalArgumentException if one of provided nodes does not belong to current graph
      * @return List that contains path (sequence of nodes) from starting node to end node
      * */
-    @Override
     public List<Graph.Node> findPath(Graph.Node from, Graph.Node to) {
         if (!graph.containsNode(from) || !graph.containsNode(to)) {
             throw new IllegalArgumentException("Node does not belong to current graph");
