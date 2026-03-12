@@ -19,7 +19,6 @@ public final class Graph {
         this(true, ++lastGraphID);
     }
 
-    // TODO: 1. Add methods to retreive Edge; 2. Add getGraphId method to Edge class; 3. asList() method but for all edges
     private Graph(boolean directed, int graphId) {
         this.graphId = graphId;
         this.directed = directed;
@@ -224,9 +223,61 @@ public final class Graph {
         return nodes.containsKey(node);
     }
 
+    /**
+     * Returns all Edges of provided Node
+     * @param node node which edges are required to get
+     * @throws IllegalArgumentException if node does not belong to current graph
+     * @return List of all Edges of provided node
+     * */
+    public List<Edge> getEdgesOfStartNode(Node node) {
+        validateNode(node);
+        Map<Node, Edge> allNodes = nodes.get(node);
+        if (allNodes == null) {
+            return Collections.emptyList();
+        }
+        return new ArrayList<>(allNodes.values());
+    }
+
+    /**
+     * Retrieves Edge that connects two provided nodes
+     * @param from starting node
+     * @param to target node
+     * @throws IllegalArgumentException if at least one node does not belong to current graph
+     * @return Edge that represents connection between nodes or null if such connection does not exist
+     * */
+    public Edge getEdgeOfTwoNodes(Node from, Node to) {
+        validateNodes(from, to);
+        return nodes.get(from).get(to);
+    }
+
+    /**
+     * Returns all Edges that exist for current graph
+     * @return List of all Edges of current Graph
+     * */
+    public List<Edge> getAllEdges() {
+        return nodes.values().stream()
+                .flatMap(map -> map.values().stream())
+                .toList();
+    }
+
+    /**
+     * Provides method to change distance of two provided Nodes if they are connected
+     * @param from starting node
+     * @param to target node
+     * @param newDistance new distance that has to be changed
+     * @throws IllegalArgumentException if at least one node does not belong to current graph
+     * */
+    public void changeDistanceBetweenNodes(Node from, Node to, int newDistance) {
+        validateNodes(from, to);
+        if (newDistance <= 0) throw new IllegalArgumentException("Distance cannot be negative or zero");
+
+        Edge edge = getEdgeOfTwoNodes(from, to);
+        edge.changeDistance(newDistance);
+    }
+
     public static final class Edge {
         private final int graphId;
-        private final int distance;
+        private int distance;
         private final int id;
         private final Node target;
 
@@ -249,6 +300,10 @@ public final class Graph {
             return target;
         }
 
+        private void changeDistance(int newDistance) {
+            this.distance = newDistance;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -267,9 +322,6 @@ public final class Graph {
         private final int graphId;
         private final String name;
 
-        private Node(int id, int graphId) {
-            this(id, graphId, "");
-        }
         private Node(int id, int graphId, String name) {
             this.id = id;
             this.graphId = graphId;
